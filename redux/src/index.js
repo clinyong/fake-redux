@@ -1,3 +1,15 @@
+function compose(...funcs) {
+  if (funcs.length === 0) {
+    return args => args;
+  }
+
+  if (funcs.length === 1) {
+    return funcs[0];
+  }
+
+  return funcs.reduce((a, b) => (...args) => a(b(...args)));
+}
+
 /**
  * @param {Object} reducers
  */
@@ -23,8 +35,13 @@ function combineReducers(reducers) {
 
 /**
  * @param {Function} reducer
+ * @param {Function} enhancer
  */
-function createStore(reducer) {
+function createStore(reducer, enhancer) {
+  if (enhancer) {
+    return enhancer(createStore)(reducer);
+  }
+
   let isDispatching = false;
   let currentState;
   let listeners = [];
@@ -66,7 +83,27 @@ function createStore(reducer) {
   };
 }
 
+function applyMiddleware(...middlewares) {
+  return createStore => (...args) => {
+    const store = createStore(...args);
+
+    const chain = middlewares.map(middleware =>
+      middleware({
+        getState: store.getState
+      })
+    );
+
+    const dispatch = compose(...chain)(store.dispatch);
+
+    return {
+      ...store,
+      dispatch
+    };
+  };
+}
+
 module.exports = {
   combineReducers,
-  createStore
+  createStore,
+  applyMiddleware
 };
