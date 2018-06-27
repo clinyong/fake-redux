@@ -76,6 +76,9 @@ function createStore(reducer, enhancer) {
     return currentState;
   }
 
+  // 初始化 currentState
+  dispatch({ type: "@@redux/INIT" });
+
   return {
     dispatch,
     subscribe,
