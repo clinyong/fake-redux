@@ -4,6 +4,13 @@
   "main": "index.js",
   "license": "MIT",
   "devDependencies": {
-    "jest": "^23.1.0"
+    "babel-core": "^6.26.3",
+    "babel-jest": "^23.2.0",
+    "babel-preset-react": "^6.24.1",
+    "jest": "^23.1.0",
+    "prop-types": "^15.6.2",
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1",
+    "react-testing-library": "^4.0.2"
   }
 }
